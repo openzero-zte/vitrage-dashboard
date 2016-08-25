@@ -66,7 +66,14 @@ function hzEntitiesGraph() {
         var force = d3.layout.force()
             .gravity(0.05)
             .distance(100)
-            .charge(-100)
+            .charge(function(d) {
+                factor = {
+                    'openstack.cluster': 8,
+                    'nova.host': 4,
+                    'nova.instance': 2
+                };
+                return -100 * (factor[d.type] || 1);
+            })
             //.friction(0.8)
             .linkDistance(function(d) {
                 if (d.relationship_type === 'on') {
